@@ -1,0 +1,34 @@
+
+async function loop() {
+  await animate(".indicator", 2, { x: 0 });
+  await animate(".indicator", 0.8, { x: window.innerWidth, delay: 0.3 });
+  set(".indicator", { x: -window.innerWidth });
+  await step();
+  loop();
+}
+
+async function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function loadImages() {
+  const promises = data.map(({ image }) => loadImage(image));
+  return Promise.all(promises);
+}
+
+async function start() {
+  try {
+    await loadImages();
+    init();
+  } catch (error) {
+    console.error("One or more images failed to load", error);
+  }
+}
+
+start()
+  </script>
